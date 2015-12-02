@@ -28,11 +28,11 @@ Mesh createSolidOoctahedron();
 int main(int argc, char const *argv[])
 {
 	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "Labs");
-	ShaderProgram shaderProgram("./resourses/shaders/basicShader");
+	ShaderProgram shaderProgram("./resourses/shaders/newShader");
 	Texture texture("./resourses/textures/bricks.jpg");
 	Transform transform;
-	Camera camera(  glm::vec3(0.0f, 0.0f, 1.0f), 				// position
-					glm::vec3(0.0f, 0.5f, -1.0f), 				// lookAt
+	Camera camera(  glm::vec3(0.0f, 0.5f, 1.0f), 				// position
+					glm::vec3(0.0f, 0.0f, -1.0f), 				// lookAt
 					glm::vec3(0.0f, 1.0f, 0.0f), 				// up
 				 	70.0f, 										// fovy
 				 	(float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT, // aspect
@@ -40,7 +40,10 @@ int main(int argc, char const *argv[])
 				 	100.0f);									// zFar
 	
 	Mesh axis = createAxis();
-	Mesh octahedron = createSolidOoctahedron();
+	Transform axisTransform;
+	// axisTransform.setPos(glm::vec3(0.1, 0.1, 0.1));
+	axis.addInstance(axisTransform.getModel());
+	// Mesh octahedron = createSolidOoctahedron();
 	
 	bool stateMachine = false;
 
@@ -50,7 +53,7 @@ int main(int argc, char const *argv[])
 
 	int x = 0, y = 0;
 
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	// SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_Event event;
 
 	bool isRunning = true;
@@ -144,12 +147,12 @@ int main(int argc, char const *argv[])
 		transform.setScale(glm::vec3(1.0 * scale, 1.0 * scale , 1.0 * scale ));
 
 		shaderProgram.bind();
-		shaderProgram.update(transform, camera);
-
+		shaderProgram.update(camera.getView(), camera.getProjection());
+		
 		axis.draw();
 
-		texture.bind();
-		octahedron.draw();
+		// texture.bind();
+		// octahedron.draw();
 
 		display.swapBuffers();
 		SDL_Delay(1);

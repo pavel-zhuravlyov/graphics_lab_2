@@ -27,14 +27,6 @@ public:
 		return posMat * rotMat * scaleMat;
 	}
 
-	inline glm::mat4 getMVP(const Camera& camera) const
-	{
-		glm::mat4 viewProjection = camera.getViewProjection();
-		glm::mat4 model = getModel();
-
-		return viewProjection * model;
-	}
-
 	glm::vec3* getPos() { return &pos; }
 	glm::vec3* getRot() { return &rot; }
 	glm::vec3* getScale() { return &scale; }

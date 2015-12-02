@@ -67,18 +67,24 @@ class Mesh
 	public:
 	    Mesh();
 	    Mesh(ModelAsset model);
-
 		~Mesh();
 
+        void addInstance(glm::mat4 modelMatrix);
 		void draw();
 
 	private:
+		static const unsigned int NUM_BUFFERS = 6;
 
-		static const unsigned int NUM_BUFFERS = 5;
         GLenum m_primitiveType;
 		GLuint m_vertexArrayObject;
 		GLuint m_vertexArrayBuffers[NUM_BUFFERS];
+        GLuint m_modelMatrixBuffer;
+
 		unsigned int m_numIndices;
+        unsigned int m_instanceCount;
+
+        std::vector<glm::mat4> m_modelMatrices;
+
 };
 
 #endif

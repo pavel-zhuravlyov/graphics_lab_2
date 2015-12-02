@@ -18,9 +18,14 @@ public:
 		this->projection = glm::perspective(fov, aspect, zNear, zFar);
 	}
 
-	inline glm::mat4 getViewProjection() const
+	inline glm::mat4 getView() const
 	{
-		return projection * glm::lookAt(position, lookAt, up);
+		return glm::lookAt(position, lookAt, up);
+	}
+
+	inline glm::mat4 getProjection() const
+	{
+		return projection;
 	}
 
 	void moveForward(float amount)
