@@ -9,48 +9,48 @@
 
 struct ModelAsset
 {
-    GLenum primitiveType;
+	GLenum primitiveType;
 
-    std::vector<glm::vec3> positions; 
-    std::vector<glm::vec3> colors;
-    std::vector<glm::vec2> texCoords;
-    std::vector<glm::vec3> normals;
+	std::vector<glm::vec3> positions; 
+	std::vector<glm::vec3> colors;
+	std::vector<glm::vec2> texCoords;
+	std::vector<glm::vec3> normals;
 
-    std::vector<unsigned int> indices;
+	std::vector<unsigned int> indices;
 
-    void addVertex(const glm::vec3& position, const glm::vec3& color, const glm::vec2& texCoord, const glm::vec3& normal) {
-        positions.push_back(position);
-        colors.push_back(color);
-        texCoords.push_back(texCoord);
-        normals.push_back(normal);
-    }
+	void addVertex(const glm::vec3& position, const glm::vec3& color, const glm::vec2& texCoord, const glm::vec3& normal) {
+		positions.push_back(position);
+		colors.push_back(color);
+		texCoords.push_back(texCoord);
+		normals.push_back(normal);
+	}
 
-    void addVertex(const glm::vec3& position) {
-        positions.push_back(position);
-        colors.push_back(glm::vec3(0.0, 0.0, 0.0));
-        texCoords.push_back(glm::vec2(0.0, 0.0));
-        normals.push_back(glm::vec3(0.0, 0.0, 0.0));
-    }
+	void addVertex(const glm::vec3& position) {
+		positions.push_back(position);
+		colors.push_back(glm::vec3(0.0, 0.0, 0.0));
+		texCoords.push_back(glm::vec2(0.0, 0.0));
+		normals.push_back(glm::vec3(0.0, 0.0, 0.0));
+	}
 
-    void addIndex(unsigned int index) {
-        indices.push_back(index);
-    }
+	void addIndex(unsigned int index) {
+		indices.push_back(index);
+	}
 
-    void addIndices(std::vector<unsigned int> other) {
-        indices.insert(indices.end(), other.begin(), other.end());
-    }
+	void addIndices(std::vector<unsigned int> other) {
+		indices.insert(indices.end(), other.begin(), other.end());
+	}
 };
 
 struct ModelInstance
 {
-    ModelAsset model;
-    Transform transform;
+	ModelAsset model;
+	Transform transform;
 
-    void setColor(glm::vec3 color) {
-        for (auto & it : model.colors) {
-            it = color;
-        }
-    }
+	void setColor(glm::vec3 color) {
+		for (auto & it : model.colors) {
+			it = color;
+		}
+	}
 };
 
 enum MeshBufferPositions
@@ -59,31 +59,32 @@ enum MeshBufferPositions
 	COLOR_VB,
 	TEXCOORD_VB,
 	NORMAL_VB,
-	INDEX_VB
+	INDEX_VB,
+	MODEL_VB
 };
 
 class Mesh
 {
 	public:
-	    Mesh();
-	    Mesh(ModelAsset model);
+		Mesh();
+		Mesh(ModelAsset model);
 		~Mesh();
 
-        void addInstance(glm::mat4 modelMatrix);
-		void draw();
+		void addInstance(glm::mat4 modelMatrix);
+		void draw(glm::mat4 modelMatrix);
 
 	private:
 		static const unsigned int NUM_BUFFERS = 6;
 
-        GLenum m_primitiveType;
+		GLenum m_primitiveType;
 		GLuint m_vertexArrayObject;
 		GLuint m_vertexArrayBuffers[NUM_BUFFERS];
-        GLuint m_modelMatrixBuffer;
+		GLuint m_modelMatrixBuffer;
 
 		unsigned int m_numIndices;
-        unsigned int m_instanceCount;
+		unsigned int m_instanceCount;
 
-        std::vector<glm::mat4> m_modelMatrices;
+		std::vector<glm::mat4> m_modelMatrices;
 
 };
 

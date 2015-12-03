@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
 {
 	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "Labs");
 	ShaderProgram shaderProgram("./resourses/shaders/newShader");
-	Texture texture("./resourses/textures/bricks.jpg");
+	// Texture texture("./resourses/textures/bricks.jpg");
 	Transform transform;
 	Camera camera(  glm::vec3(0.0f, 0.5f, 1.0f), 				// position
 					glm::vec3(0.0f, 0.0f, -1.0f), 				// lookAt
@@ -41,22 +41,16 @@ int main(int argc, char const *argv[])
 	
 	Mesh axis = createAxis();
 	Transform axisTransform;
-	// axisTransform.setPos(glm::vec3(0.1, 0.1, 0.1));
+	axis.addInstance(axisTransform.getModel());
+
+	axisTransform.setPos(glm::vec3(3.0, 0.0, 0.0));
 	axis.addInstance(axisTransform.getModel());
 	// Mesh octahedron = createSolidOoctahedron();
 	
-	bool stateMachine = false;
-
-	float motion_x = 0.0f;
-	float motion_y = 0.0f;
-	float scale = 1.0f;
-
-	int x = 0, y = 0;
-
 	// SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_Event event;
-
 	bool isRunning = true;
+	float scale = 1.0f;
 
 	while(isRunning)
 	{
@@ -83,6 +77,10 @@ int main(int argc, char const *argv[])
        					camera.yaw(-10.0f);
        				} else if (event.key.keysym.sym == SDLK_a) {
        					camera.yaw(10.0f);
+       				} else if (event.key.keysym.sym == SDLK_PLUS) {
+       					scale += 0.01;
+       				} else if (event.key.keysym.sym == SDLK_MINUS) {
+       					scale -= 0.01;
        				} 
             		break;
 
@@ -94,51 +92,19 @@ int main(int argc, char const *argv[])
 					}
 					break;
 
-	            case SDL_MOUSEBUTTONDOWN:
-	            {
-	                if(event.button.button == SDL_BUTTON_LEFT)
-	                {
-	                    if(stateMachine == false)
-	                    {
-	                        stateMachine = true;
-	                        SDL_GetMouseState(&x, &y);
-	                    }
-	                }
-	                break;
-	            }
 	            case SDL_MOUSEMOTION:
-	            {
-
-	            	if (event.motion.xrel > 0) {
-	            		camera.yaw(-1.0f);
-	            	} else if (event.motion.xrel < 0) {
-	            		camera.yaw(1.0f);
-	            	} 
-	            	if (event.motion.yrel > 0) {
+	           //  	if (event.motion.xrel > 0) {
+	           //  		camera.yaw(-1.0f);
+	           //  	} else if (event.motion.xrel < 0) {
+	           //  		camera.yaw(1.0f);
+	           //  	} 
+	         		// if (event.motion.yrel > 0) {
 	            		
-	            	} else if (event.motion.yrel < 0) {
+	           //  	} else if (event.motion.yrel < 0) {
 	            		
-	            	}
+	           //  	}
+	            	break;
 
-	                if(stateMachine == true)
-	                {
-	                    motion_x += event.motion.x - x;
-	                    motion_y += event.motion.y - y;
-	                    break;
-	                }
-	            }
-	            case SDL_MOUSEBUTTONUP:
-	            {
-	                if(event.button.button == SDL_BUTTON_LEFT)
-	                {
-	                	float motion_x = 0.0f;
-						float motion_y = 0.0f;
-	                    if(stateMachine != false)
-	                    {
-	                        stateMachine = false;
-	                    }
-	                }
-	            }
                 default:
                     break;
             }
@@ -149,7 +115,7 @@ int main(int argc, char const *argv[])
 		shaderProgram.bind();
 		shaderProgram.update(camera.getView(), camera.getProjection());
 		
-		axis.draw();
+		axis.draw(transform.getModel());
 
 		// texture.bind();
 		// octahedron.draw();

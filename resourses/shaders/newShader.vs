@@ -9,13 +9,13 @@ layout (location = 4) in mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 normal0;
-out vec3 color0;
+//out vec3 normal0;
+//out vec3 color0;
 
 void main()
 {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
 	gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0));
-	normal0 = (modelViewMatrix * vec4(normal, 1.0)).xyz;
-	color0 = color;
+	//normal0 = (modelViewMatrix * vec4(normal, 1.0)).xyz;
+	//color0 = color;
 }	
