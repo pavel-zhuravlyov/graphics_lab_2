@@ -71,9 +71,10 @@ class Mesh
 		~Mesh();
 
 		void addInstance(glm::mat4 modelMatrix);
-		void draw(glm::mat4 modelMatrix);
+		void draw();
 
 	private:
+
 		static const unsigned int NUM_BUFFERS = 6;
 
 		GLenum m_primitiveType;

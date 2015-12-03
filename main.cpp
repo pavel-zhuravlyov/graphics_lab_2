@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <SDL2/SDL.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "display.h"
 #include "shader.h"
@@ -25,6 +26,15 @@ Mesh createSolidOoctahedron();
 // 	Mesh octahedron = createSolidOoctahedron();
 // }
 
+// void printMat4(std::string str, glm::mat4 mat) {
+// 	printf("%s\n", str.c_str());
+// 	const float *pSource = (const float*)glm::value_ptr(mat);
+// 	for (int i = 0; i < 16; ++i) {
+// 		if (i % 4 == 0) printf("\n");
+// 		printf("%f ", pSource[i]);
+// 	}
+// }
+
 int main(int argc, char const *argv[])
 {
 	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "Labs");
@@ -38,14 +48,12 @@ int main(int argc, char const *argv[])
 				 	(float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT, // aspect
 				 	0.1f, 										// zNear
 				 	100.0f);									// zFar
-	
+
 	Mesh axis = createAxis();
 	Transform axisTransform;
 	axis.addInstance(axisTransform.getModel());
-
 	axisTransform.setPos(glm::vec3(3.0, 0.0, 0.0));
 	axis.addInstance(axisTransform.getModel());
-	// Mesh octahedron = createSolidOoctahedron();
 	
 	// SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_Event event;
@@ -65,30 +73,30 @@ int main(int argc, char const *argv[])
 					break;
 
 				case SDL_KEYDOWN:
-       				if (event.key.keysym.sym == SDLK_UP) {
-       					camera.moveForward(0.1f);
-       				} else if (event.key.keysym.sym == SDLK_DOWN) {
-       					camera.moveForward(-0.1f);
-       				} else if (event.key.keysym.sym == SDLK_LEFT) {
-       					camera.moveRight(-0.1f);
-       				} else if (event.key.keysym.sym == SDLK_RIGHT) {
-       					camera.moveRight(0.1f);
-       				} else if (event.key.keysym.sym == SDLK_d) {
-       					camera.yaw(-10.0f);
-       				} else if (event.key.keysym.sym == SDLK_a) {
-       					camera.yaw(10.0f);
-       				} else if (event.key.keysym.sym == SDLK_PLUS) {
-       					scale += 0.01;
-       				} else if (event.key.keysym.sym == SDLK_MINUS) {
-       					scale -= 0.01;
-       				} 
-            		break;
+					if (event.key.keysym.sym == SDLK_UP) {
+						camera.moveForward(0.1f);
+					} else if (event.key.keysym.sym == SDLK_DOWN) {
+						camera.moveForward(-0.1f);
+					} else if (event.key.keysym.sym == SDLK_LEFT) {
+						camera.moveRight(-0.1f);
+					} else if (event.key.keysym.sym == SDLK_RIGHT) {
+						camera.moveRight(0.1f);
+					} else if (event.key.keysym.sym == SDLK_d) {
+						camera.yaw(-10.0f);
+					} else if (event.key.keysym.sym == SDLK_a) {
+						camera.yaw(10.0f);
+					} else if (event.key.keysym.sym == SDLK_PLUS) {
+						scale += 0.01f;
+					} else if (event.key.keysym.sym == SDLK_MINUS) {
+						scale -= 0.01f;
+					} 
+					break;
 
 				case SDL_MOUSEWHEEL: 
-					if (event.wheel.y >= 0){  
-						scale += 0.01;
-					} else {
-						scale -= 0.01;
+					if (event.wheel.y > 0) {  
+						scale += 0.01f;
+					} else if (event.wheel.y < 0) {
+						scale -= 0.01f;
 					}
 					break;
 
@@ -109,13 +117,12 @@ int main(int argc, char const *argv[])
                     break;
             }
 		}
-		
+
 		transform.setScale(glm::vec3(1.0 * scale, 1.0 * scale , 1.0 * scale ));
 
 		shaderProgram.bind();
-		shaderProgram.update(camera.getView(), camera.getProjection());
-		
-		axis.draw(transform.getModel());
+		shaderProgram.update(transform.getModel(), camera.getView(), camera.getProjection());
+		axis.draw();
 
 		// texture.bind();
 		// octahedron.draw();

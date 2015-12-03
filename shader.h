@@ -11,13 +11,13 @@ public:
 	ShaderProgram(const std::string& fileName);
 
 	void bind();
-	void update(const glm::mat4 viewMatrix, const glm::mat4 projectionMatrix);
+	void update(const glm::mat4 globalModelMatrix, const glm::mat4 viewMatrix, const glm::mat4 projectionMatrix);
 
 	~ShaderProgram();
 
 private:
 	static const unsigned int NUM_SHADERS = 2;
-	static const unsigned int NUM_UNIFORMS = 2;
+	static const unsigned int NUM_UNIFORMS = 3;
 
 	std::string loadShader(const std::string& fileName);
 	void checkShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);

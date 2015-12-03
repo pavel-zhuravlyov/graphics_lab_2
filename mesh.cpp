@@ -7,6 +7,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+
 Mesh::Mesh(ModelAsset model)
 {
 	m_instanceCount = 0;
@@ -74,21 +75,20 @@ void printMat4(std::string str, glm::mat4 mat) {
 	}
 }
 
-void Mesh::draw(glm::mat4 modelMatrix)
+void Mesh::draw()
 {
-	for (auto & it : m_modelMatrices) {
-		it = modelMatrix * it;
-	}
+	// for (auto & it : m_modelMatrices) {
+	// 	it = Mesh::transform->getModel() * it;
+	// }
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[MODEL_VB]);
 	glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), m_modelMatrices.data(), GL_DYNAMIC_DRAW);
-	// glBufferData(GL_ARRAY_BUFFER, sizeof(Matrix4f) * NumInstances, WVPMats, GL_DYNAMIC_DRAW);
 
-	if (m_instanceCount) {
+	// if (m_instanceCount) {
 		glBindVertexArray(m_vertexArrayObject);
 		glDrawElementsInstanced(m_primitiveType, m_numIndices, GL_UNSIGNED_INT, 0, m_instanceCount);
 		glBindVertexArray(0);
-	}
+	// }
 	
 }
 

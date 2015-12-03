@@ -6,6 +6,7 @@ layout (location = 2) in vec2 texCoord;
 layout (location = 3) in vec3 normal;
 layout (location = 4) in mat4 modelMatrix;
 
+uniform mat4 globalModelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
@@ -14,7 +15,7 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
-	mat4 modelViewMatrix = viewMatrix * modelMatrix;
+	mat4 modelViewMatrix = viewMatrix * (globalModelMatrix * modelMatrix);
 	gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0));
 	//normal0 = (modelViewMatrix * vec4(normal, 1.0)).xyz;
 	//color0 = color;
