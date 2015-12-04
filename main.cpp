@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
 	ShaderProgram shaderProgram("./resourses/shaders/newShader");
 	// Texture texture("./resourses/textures/bricks.jpg");
 	Transform transform;
-	Camera camera(  glm::vec3(0.0f, 0.5f, 1.0f), 				// position
+	Camera camera(  glm::vec3(1.0f, 1.5f, 4.0f), 				// position
 					glm::vec3(0.0f, 0.0f, -1.0f), 				// lookAt
 					glm::vec3(0.0f, 1.0f, 0.0f), 				// up
 				 	70.0f, 										// fovy
@@ -50,12 +50,20 @@ int main(int argc, char const *argv[])
 				 	100.0f);									// zFar
 
 	Mesh axis = createAxis();
-	Transform axisTransform;
-	axis.addInstance(axisTransform.getModel());
-	axisTransform.setPos(glm::vec3(3.0, 0.0, 0.0));
-	axis.addInstance(axisTransform.getModel());
+	Mesh wireOctahedron = createWireOoctahedron();
+	Transform meshTransform;
+
+	meshTransform.setScale(glm::vec3(10.0, 10.0, 10.0));
+	axis.addInstance(meshTransform.getModel());
+
+	// meshTransform.setPos(glm::vec3(3.0, 0.0, 0.0));
+	// axis.addInstance(meshTransform.getModel());
+
+	meshTransform.setPos(glm::vec3(1.0, 0.5, 1.0));
+	meshTransform.setScale(glm::vec3(1.0, 1.0, 1.0));
+	wireOctahedron.addInstance(meshTransform.getModel());
 	
-	// SDL_SetRelativeMouseMode(SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_Event event;
 	bool isRunning = true;
 	float scale = 1.0f;
@@ -101,16 +109,16 @@ int main(int argc, char const *argv[])
 					break;
 
 	            case SDL_MOUSEMOTION:
-	           //  	if (event.motion.xrel > 0) {
-	           //  		camera.yaw(-1.0f);
-	           //  	} else if (event.motion.xrel < 0) {
-	           //  		camera.yaw(1.0f);
-	           //  	} 
-	         		// if (event.motion.yrel > 0) {
+	            	if (event.motion.xrel > 0) {
+	            		camera.yaw(-1.0f);
+	            	} else if (event.motion.xrel < 0) {
+	            		camera.yaw(1.0f);
+	            	} 
+	         		if (event.motion.yrel > 0) {
 	            		
-	           //  	} else if (event.motion.yrel < 0) {
+	            	} else if (event.motion.yrel < 0) {
 	            		
-	           //  	}
+	            	}
 	            	break;
 
                 default:
@@ -122,7 +130,9 @@ int main(int argc, char const *argv[])
 
 		shaderProgram.bind();
 		shaderProgram.update(transform.getModel(), camera.getView(), camera.getProjection());
+		
 		axis.draw();
+		wireOctahedron.draw();
 
 		// texture.bind();
 		// octahedron.draw();
