@@ -26,6 +26,11 @@ ShaderProgram::ShaderProgram(const std::string& fileName)
     uniforms[0] = glGetUniformLocation(program, "globalModelMatrix");
 	uniforms[1] = glGetUniformLocation(program, "viewMatrix");
     uniforms[2] = glGetUniformLocation(program, "projectionMatrix");
+    uniforms[3] = glGetUniformLocation(program, "Ambient");
+    uniforms[4] = glGetUniformLocation(program, "LightDirection");
+    uniforms[5] = glGetUniformLocation(program, "HalfVector");
+    uniforms[6] = glGetUniformLocation(program, "Shininess");
+    uniforms[7] = glGetUniformLocation(program, "Strength");
 }
 
 ShaderProgram::~ShaderProgram()
@@ -44,11 +49,18 @@ void ShaderProgram::bind()
 	glUseProgram(program);
 }
 
-void ShaderProgram::update(const glm::mat4 globalModelMatrix, const glm::mat4 viewMatrix, const glm::mat4 projectionMatrix)
+void ShaderProgram::update(const glm::mat4 globalModelMatrix, const glm::mat4 viewMatrix, const glm::mat4 projectionMatrix,
+                            glm::vec3 ambient, glm::vec3 lightDirection, glm::vec3 halfVector,float shininess, float strength)
 {
     glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &globalModelMatrix[0][0]);
 	glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &viewMatrix[0][0]);
 	glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &projectionMatrix[0][0]);
+
+    glUniformMatrix4fv(uniforms[3], 1, GL_FALSE, &ambient[0]);
+    glUniformMatrix4fv(uniforms[4], 1, GL_FALSE, &lightDirection[0]);
+    glUniformMatrix4fv(uniforms[5], 1, GL_FALSE, &halfVector[0]);
+    glUniformMatrix4fv(uniforms[6], 1, GL_FALSE, &shininess);
+    glUniformMatrix4fv(uniforms[7], 1, GL_FALSE, &strength);
 }
 
 std::string ShaderProgram::loadShader(const std::string& fileName)

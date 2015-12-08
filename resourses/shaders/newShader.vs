@@ -10,13 +10,16 @@ uniform mat4 globalModelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-//out vec3 normal0;
-out vec3 color0;
+out vec2 TexCoord;
+out vec3 Color;
+out vec3 Normal;
 
 void main()
 {
 	mat4 modelViewMatrix = viewMatrix * (globalModelMatrix * modelMatrix);
 	gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0));
-	//normal0 = (modelViewMatrix * vec4(normal, 1.0)).xyz;
-	color0 = color;
+
+	TexCoord = texCoord;
+	Color = color;
+	Normal = normal;
 }	
