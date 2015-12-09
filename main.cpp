@@ -16,7 +16,9 @@
 Mesh createAxis();
 Mesh createWireOoctahedron();
 Mesh createSolidOoctahedron();
-Mesh createSquare();
+
+Mesh createFloorMesh();
+Mesh createWallsMesh();
 
 // void draw() {
 // // 	std::vector<Mesh> meshes;
@@ -40,13 +42,13 @@ int main(int argc, char const *argv[])
 {
 	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "Labs");
 	ShaderProgram shaderProgram("./resourses/shaders/newShader");
-	Texture texture("./resourses/textures/bricks.jpg");
+	Texture bricks("./resourses/textures/bricks0.jpg");
 	Texture white("./resourses/textures/white.jpg");
 	Transform transform;
 
 
 	glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
-	Camera camera(  glm::vec3(1.0f, 1.5f, 4.0f), 				// position
+	Camera camera(  glm::vec3(1.0f, 1.0f, 1.0f), 				// position
 					forward, 									// forward
 					glm::vec3(0.0f, 1.0f, 0.0f), 				// up
 				 	70.0f, 										// fovy
@@ -55,35 +57,29 @@ int main(int argc, char const *argv[])
 				 	100.0f);									// zFar
 
 	Mesh axis = createAxis();
-	Mesh wireOctahedron = createWireOoctahedron();
-	Mesh solidOctahedron = createSolidOoctahedron();
-	Mesh square = createSquare();
-	Transform meshTransform;
+	// Mesh wireOctahedron = createWireOoctahedron();
+	// Mesh solidOctahedron = createSolidOoctahedron();
 
-	for (int i = 0; i < 10; ++i) {
-		for (int j = 0; j < 10; ++j) {
-			meshTransform.setPos(glm::vec3(i, 0, j));
-			square.addInstance(meshTransform.getModel());
-		}
-	}
+	// Mesh floorMesh = createFloorMesh();
+	// Mesh wallsMesh = createWallsMesh();
 
-	meshTransform.setPos(glm::vec3(0.0, 0.0, 0.0));
-	meshTransform.setScale(glm::vec3(10.0, 10.0, 10.0));
-	axis.addInstance(meshTransform.getModel());
+	// meshTransform.setPos(glm::vec3(0.0, 0.0, 0.0));
+	// meshTransform.setScale(glm::vec3(10.0, 10.0, 10.0));
+	// axis.addInstance(meshTransform.getModel());
 
-	meshTransform.setPos(glm::vec3(1.0, 0.5, 1.0));
-	meshTransform.setScale(glm::vec3(1.0, 1.0, 1.0));
-	wireOctahedron.addInstance(meshTransform.getModel());
+	// meshTransform.setPos(glm::vec3(1.0, 0.5, 1.0));
+	// meshTransform.setScale(glm::vec3(1.0, 1.0, 1.0));
+	// wireOctahedron.addInstance(meshTransform.getModel());
 
-	meshTransform.setPos(glm::vec3(5.0, 2.0, 5.0));
-	solidOctahedron.addInstance(meshTransform.getModel());
+	// meshTransform.setPos(glm::vec3(5.0, 2.0, 5.0));
+	// solidOctahedron.addInstance(meshTransform.getModel());
 
 
 	glm::vec3 ambient =  glm::vec3(1.0, 1.0, 1.0);
 	glm::vec3 lightDirection = glm::vec3(-1.0, -1.0, -1.0);
 	glm::vec3 halfVector = glm::normalize(lightDirection + forward);
-	float shininess = 5.0;
-	float strength = 5.0;
+	float shininess = 1.0;
+	float strength = 1.0;
 	
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_Event event;
@@ -139,22 +135,20 @@ int main(int argc, char const *argv[])
             }
 		}
 
-		transform.setScale(glm::vec3(1.0 * scale, 1.0 * scale , 1.0 * scale ));
+		// transform.setScale(glm::vec3(1.0 * scale, 1.0 * scale , 1.0 * scale ));
 
 		shaderProgram.bind();
 		shaderProgram.update(transform.getModel(), camera.getView(), camera.getProjection(),
                             ambient, lightDirection, halfVector, shininess, strength);
 
 		white.bind();
+		axis.draw();
 
-		// axis.draw();
-		// wireOctahedron.draw();
+		// bricks.bind();
+		// floorMesh.draw();
+		// wallsMesh.draw();
 
-		texture.bind();
-
-		square.draw();
-
-		solidOctahedron.draw();
+		// solidOctahedron.draw();
 
 		display.swapBuffers();
 		SDL_Delay(1);
@@ -241,7 +235,7 @@ Mesh createSolidOoctahedron() {
 	return Mesh(model);
 }
 
-Mesh createSquare() {
+Mesh createFloorMesh() {
 	ModelAsset model;
 
 	model.addVertex(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0), glm::vec2(0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
@@ -257,5 +251,62 @@ Mesh createSquare() {
 
 	model.primitiveType = GL_TRIANGLES;
 
-	return Mesh(model);
+	Transform transform;
+
+	Mesh mesh(model);
+
+	for (int i = 0; i < 10; ++i) {
+		for (int j = 0; j < 10; ++j) {
+			transform.setPos(glm::vec3(i, 0, j));
+			mesh.addInstance(transform.getModel());
+		}
+	}
+
+	return mesh;
+}
+
+Mesh createWallsMesh() {
+	ModelAsset model;
+
+	model.addVertex(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0), glm::vec2(0.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
+	model.addVertex(glm::vec3(1.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0), glm::vec2(1.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
+	model.addVertex(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 1.0, 1.0), glm::vec2(0.0, 1.0), glm::vec3(0.0, 0.0, 1.0));
+	model.addVertex(glm::vec3(1.0, 1.0, 0.0), glm::vec3(1.0, 1.0, 1.0), glm::vec2(1.0, 1.0), glm::vec3(0.0, 0.0, 1.0));
+
+	std::vector<unsigned int> indices = {
+		0, 3, 1, 0, 2, 3,
+	};
+
+	model.addIndices(indices);	
+
+	model.primitiveType = GL_TRIANGLES;
+
+	Transform transform;
+
+	Mesh mesh(model);
+
+	int width = 5;
+	int height = 5;
+
+	for (int i = 0; i < width; ++i) {
+		for (int j = 0; j < height; ++j) {
+			transform.setPos(glm::vec3(width, height, 0));
+			transform.setRot(glm::vec3(0, 0, 0));
+			mesh.addInstance(transform.getModel());			
+
+			// transform.setPos(glm::vec3(j, i, 10));
+			// transform.setRot(glm::vec3(0, 180, 0));
+			// mesh.addInstance(transform.getModel());
+
+			// transform.setPos(glm::vec3(0, j, i));
+			// transform.setRot(glm::vec3(0, 270, 0));
+			// mesh.addInstance(transform.getModel());
+
+			// transform.setPos(glm::vec3(10, i, j));
+			// transform.setRot(glm::vec3(0, 90, 0));
+			// mesh.addInstance(transform.getModel());
+		}
+	}
+
+	return mesh;
 }
